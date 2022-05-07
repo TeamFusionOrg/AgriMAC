@@ -188,10 +188,11 @@ class Server():
                         print(f'{c.BOLD}[DATABASE]{c.RESET} updated database with msg recived -> {c.ULINE+client_id+c.RESET}')
                         self.server_log.write(datetime.now().strftime("%H:%M:%S ==> "))
                         self.server_log.write(f'[DATABASE] updated database with msg recived -> {client_id}\n')
+
                     except Exception as err:
-                        print('you are fucked mannnnnn')
-
-
+                        self.error_log.write(datetime.now().strftime("%H:%M:%S ==> "))
+                        self.error_log.write('[ERROR] error msg -> {}\n'.format(err))
+                        print(c.Magenta+c.BOLD+'[ERROR]'+c.RESET+ c.Magenta,'error msg -> {}'.format(err), c.RESET)
 
     def send_message(self, conn, message, client_id, encrypt = True):
         """
@@ -297,6 +298,10 @@ class Server():
         try:
             # the connect command will bind teo client together, so they cantalk to ech other
             if message[0] == 'connect':
+                print(f'{c.BOLD}[COMMAND]{c.RESET} command recived from -> {c.ULINE+client_id+c.RESET}')
+                self.server_log.write(datetime.now().strftime("%H:%M:%S ==> "))
+                self.server_log.write(f'[COMMAND] command recived from -> {client_id}\n')
+
                 # you cannot connect your self
                 if message[1] != client_id:
                     # chech if requested client online and live
@@ -321,14 +326,36 @@ class Server():
                 return True
 
             elif message[0] == 'send_data':
+                print(f'{c.BOLD}[COMMAND]{c.RESET} command recived from -> {c.ULINE+client_id+c.RESET}')
+                self.server_log.write(datetime.now().strftime("%H:%M:%S ==> "))
+                self.server_log.write(f'[COMMAND] command recived from -> {client_id}\n')
+
+
                 sql_string = "SELECT data FROM climate_data WHERE client_id = '{}' and date = '{}' and time = '{}'".format(message[1], message[2], message[3]) 
-                mycursor.execute(sql_string)
-                myresult = mycursor.fetchall()
-                self.send_message(conn, json.dumps(myresult), client_id)
-                return True
+                try:
+                    mycursor.execute(sql_string)
+                    myresult = mycursor.fetchall()
+                    self.send_message(conn, json.dumps(myresult), client_id)
+
+                    print(f'{c.BOLD}[FORWARD]{c.RESET} fetched data sent to -> {c.ULINE+client_id+c.RESET}')
+                    self.server_log.write(datetime.now().strftime("%H:%M:%S ==> "))
+                    self.server_log.write(f'[FORWARD] fetched data sent to -> {client_id}\n')
+
+                    return True
+
+                except Exception as err:
+                    self.send_message(conn, '[-] Something went wrong in the server side', client_id)
+                    self.error_log.write(datetime.now().strftime("%H:%M:%S ==> "))
+                    self.error_log.write('[ERROR] error msg -> {}\n'.format(err))
+                    print(c.Magenta+c.BOLD+'[ERROR]'+c.RESET+ c.Magenta,'error msg -> {}'.format(err), c.RESET)
+                    return False
 
             # the quiting message. if this message recived eject the client
             elif message[0] == 'conn_quit()':
+                print(f'{c.BOLD}[COMMAND]{c.RESET} command recived from -> {c.ULINE+client_id+c.RESET}')
+                self.server_log.write(datetime.now().strftime("%H:%M:%S ==> "))
+                self.server_log.write(f'[COMMAND] command recived from -> {client_id}\n')
+
                 self.__eject_client(client_id)
                 return True
 
