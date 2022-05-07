@@ -3,7 +3,15 @@ import socket
 import threading
 from libs.colors import COLORS
 from platform import system
-from libs.cryption import decrypt, encrypt
+from os import remove
+from sys import argv
+from base64 import urlsafe_b64encode
+from cryptography.fernet import Fernet
+from cryptography.hazmat.backends import default_backend
+from cryptography.hazmat.primitives import hashes
+from cryptography.hazmat.primitives.kdf.pbkdf2 import PBKDF2HMAC
+
+
 
 class Client():
     def __init__(self, client_id, server, port):
@@ -13,6 +21,8 @@ class Client():
         server   : this is the IP address of the server to be connecter
         port     : this is the PORT of the server to be connected
         """
+        self.passwd = 'A4nJ!dk@12en#jfdk*kjns.sdjk'
+        self.key = self.key_gen(self.passwd)
         self.buffer = 64
         self.client_id = client_id
         self.server = server
@@ -30,42 +40,47 @@ class Client():
 
         self.c = COLORS()
 
-    def __hidden_send(self):
-        """
-        DOCSTRING: this is the function which uses by the thread to forward
-        messages
-        conn: connection of the client
-        client_id: user name of the client
-        """
-        # while the terminate variable is False run the infinite loop
-        while not self.terminate:
-            # in this case a OS error will be raised when the input timeout
-            try:
-                current_msg = input().strip()
-                if current_msg == 'conn_quit()':
-                    self.terminate =True
+    def key_gen(self, passwd):
+        # convert passwd to bytes
+        passwd = passwd.encode('utf-8')
+        # create a random salt from os
+        salt = b'\xd1\xafy\x8d\xd1/\xa1Pv4\xea\xf1-1\xe0~\xb2$\x17D\xdd\xa7\x8fwrmd\x02\x7f`f:'
+        # create kdf instance
+        kdf = PBKDF2HMAC(
+            algorithm=hashes.SHA256(),
+            length=32,
+            salt=salt,
+            iterations=100000,
+            backend=default_backend()
+        )
+        # derive an key prom the passwd
+        key = urlsafe_b64encode(kdf.derive(passwd))
+        #return key
+        return key
 
-                self.send_message(current_msg)
-                print()
-
-            except EOFError:
-                exit()
-
-    def __hidden_recv(self):
+    def decrypt(self, message):
         """
-        DOCSTRING: this is the function which uses by the thread to recevie messages
-        conn: connection of the client
-        client_id: user name of the client
+        DOCSTRING: This function will return the decrypted message as string
+        message: the message to decrypt as string
+        key: key for decryption as bytes
         """
-        while not self.terminate:
-            message = self.recv_message()
-            if message:
-                if str(system()) == 'Windows':
-                    print(f'[RECIVED] {message}')
-                else:
-                    print(self.c.Cyan + f'[RECIVED] {message}' + self.c.RESET)
+        fernet_obj = Fernet(self.key) # create fernet obj
+        original_content = fernet_obj.decrypt(message.encode('utf-8'))
 
-    def send_message(self, message, encrypt_= False):
+        return original_content.decode('utf-8')
+
+    def encrypt(self, message):
+        """
+        DOCSTRING: This function will return the encrypted message as string
+        message: the message to encrypt as string
+        key: key for encryption as bytes
+        """
+        fernet_obj = Fernet(self.key)
+        encrypted_message = fernet_obj.encrypt(message.encode('utf-8'))
+
+        return encrypted_message.decode('utf-8')
+
+    def send_message(self, message, encrypt_= True):
         """
         DOCSTRING: this is the primary function to sent messages anyway
         conn: connection of the client
@@ -75,7 +90,7 @@ class Client():
         # this function may raise an error when server is shutted down
         try:
             # before anthiyng else encrypt your message
-            if encrypt_: message = encrypt(message)
+            if encrypt_: message = self.encrypt(message)
             #fisrt of all we need to send size details
             message_size = str(len(message)).encode('utf-8')
             #procces message size details
@@ -89,7 +104,7 @@ class Client():
             print('[-] The server is down program is quiting...')
             self.terminate = True
 
-    def recv_message(self, encrypt = False):
+    def recv_message(self, encrypt = True):
         """
         DOCSTRING: this is the primary function to receve messages
         conn: connection of the client
@@ -103,7 +118,7 @@ class Client():
                 msg = self.client.recv(msg_size).decode('utf-8') #recive and decode
                 #before return decrypt the message
                 if encrypt:
-                    msg = decrypt(msg)
+                    msg = self.decrypt(msg)
                 return msg #return message
             
             else:
@@ -118,53 +133,34 @@ class Client():
             # this error occure wen time out
             return False
 
-    def __handle_client(self):
-        """
-        DOCSTRING: the pusrpose of this function is simple. Al this has to do
-        create two thread for sending and revceving messages. and handle
-        those clients
-        """
-        # create threads for recive messages and send messages
-        reciving_thread = threading.Thread(target=self.__hidden_recv)
-        sending_thread = threading.Thread(target=self.__hidden_send)
-
-        # start threads
-        reciving_thread.start()
-        sending_thread.start()
-
-        # after disconnecting kill those threads
-        reciving_thread.join()
-        exit()
-        sending_thread.join()
-
     def start_client(self):
         """
             DOCSTRING: this function will start the server
             fisrt try to connect to the server. And if sccueed
             send client data and establish the connection
         """
-        # print welcome message
-        print("\nClient Program started version: 1.0.0.0")
-        print('---------------------------------------\n')
 
         try:
             # connect to the server in order to start the client
             self.client.connect(self.addr)
             # send client data
-            self.send_message(self.client_id, encrypt_=False)
-            self.__handle_client()
+            self.send_message(self.client_id)
+            # self.__handle_client()
+            return True, ""
 
         except ConnectionRefusedError:
-            print("[ERROR] Server is Down program quiting")
-            exit(0)
+            status = "[ERROR] Server is Down program quiting"
+            return False, status
         
         except ConnectionAbortedError:
-            print("[ERROR] Server aborted the connection")
-            exit(0)
+            status = "[ERROR] Server aborted the connection"
+            return False, status
 
         except ConnectionError:
-            print("[ERROR] Connection error")
-            exit(0)
+            status = "[ERROR] Connection error"
+            return False, status
 
+    def stop_client(self):
+        self.send_message('conn_quit()')
 
 # end of the client class
