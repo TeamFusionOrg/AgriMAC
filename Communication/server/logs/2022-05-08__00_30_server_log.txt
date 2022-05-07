@@ -1,0 +1,104 @@
+00:30:33 ==> [START] Server is online and live 192.168.8.101 | 5151
+00:30:48 ==> [CONNECTION] new connection from 192.168.8.101 | 63500 | Sam220408_14
+00:30:49 ==> [RECIVED] msg recived from -> Sam220408_14
+00:30:49 ==> [DATABASE] updated database with msg recived -> Sam220408_14
+00:30:50 ==> [RECIVED] msg recived from -> Sam220408_14
+00:30:50 ==> [DATABASE] updated database with msg recived -> Sam220408_14
+00:30:50 ==> [RECIVED] msg recived from -> Sam220408_14
+00:30:50 ==> [DATABASE] updated database with msg recived -> Sam220408_14
+00:30:50 ==> [RECIVED] msg recived from -> Sam220408_14
+00:30:50 ==> [DATABASE] updated database with msg recived -> Sam220408_14
+00:30:50 ==> [RECIVED] msg recived from -> Sam220408_14
+00:30:50 ==> [DATABASE] updated database with msg recived -> Sam220408_14
+00:30:50 ==> [RECIVED] msg recived from -> Sam220408_14
+00:30:50 ==> [DATABASE] updated database with msg recived -> Sam220408_14
+00:30:50 ==> [RECIVED] msg recived from -> Sam220408_14
+00:30:50 ==> [DATABASE] updated database with msg recived -> Sam220408_14
+00:30:50 ==> [RECIVED] msg recived from -> Sam220408_14
+00:30:50 ==> [DATABASE] updated database with msg recived -> Sam220408_14
+00:30:50 ==> [RECIVED] msg recived from -> Sam220408_14
+00:30:50 ==> [DATABASE] updated database with msg recived -> Sam220408_14
+00:30:50 ==> [RECIVED] msg recived from -> Sam220408_14
+00:30:50 ==> [DATABASE] updated database with msg recived -> Sam220408_14
+00:30:51 ==> [RECIVED] msg recived from -> Sam220408_14
+00:30:51 ==> [DATABASE] updated database with msg recived -> Sam220408_14
+00:30:51 ==> [RECIVED] msg recived from -> Sam220408_14
+00:30:51 ==> [DATABASE] updated database with msg recived -> Sam220408_14
+00:30:51 ==> [RECIVED] msg recived from -> Sam220408_14
+00:30:51 ==> [DATABASE] updated database with msg recived -> Sam220408_14
+00:30:51 ==> [RECIVED] msg recived from -> Sam220408_14
+00:30:51 ==> [DATABASE] updated database with msg recived -> Sam220408_14
+00:30:51 ==> [RECIVED] msg recived from -> Sam220408_14
+00:30:51 ==> [DATABASE] updated database with msg recived -> Sam220408_14
+00:30:51 ==> [RECIVED] msg recived from -> Sam220408_14
+00:30:51 ==> [DATABASE] updated database with msg recived -> Sam220408_14
+00:30:51 ==> [RECIVED] msg recived from -> Sam220408_14
+00:30:51 ==> [DATABASE] updated database with msg recived -> Sam220408_14
+00:30:51 ==> [RECIVED] msg recived from -> Sam220408_14
+00:30:51 ==> [DATABASE] updated database with msg recived -> Sam220408_14
+00:30:51 ==> [RECIVED] msg recived from -> Sam220408_14
+00:30:51 ==> [DATABASE] updated database with msg recived -> Sam220408_14
+00:30:52 ==> [RECIVED] msg recived from -> Sam220408_14
+00:30:52 ==> [DATABASE] updated database with msg recived -> Sam220408_14
+00:30:52 ==> [RECIVED] msg recived from -> Sam220408_14
+00:30:52 ==> [DATABASE] updated database with msg recived -> Sam220408_14
+00:30:52 ==> [RECIVED] msg recived from -> Sam220408_14
+00:30:52 ==> [DATABASE] updated database with msg recived -> Sam220408_14
+00:30:52 ==> [RECIVED] msg recived from -> Sam220408_14
+00:30:52 ==> [DATABASE] updated database with msg recived -> Sam220408_14
+00:30:52 ==> [RECIVED] msg recived from -> Sam220408_14
+00:30:52 ==> [DATABASE] updated database with msg recived -> Sam220408_14
+00:30:52 ==> [RECIVED] msg recived from -> Sam220408_14
+00:30:52 ==> [DATABASE] updated database with msg recived -> Sam220408_14
+00:30:52 ==> [RECIVED] msg recived from -> Sam220408_14
+00:30:52 ==> [DATABASE] updated database with msg recived -> Sam220408_14
+00:30:52 ==> [RECIVED] msg recived from -> Sam220408_14
+00:30:52 ==> [DATABASE] updated database with msg recived -> Sam220408_14
+00:30:52 ==> [RECIVED] msg recived from -> Sam220408_14
+00:30:52 ==> [DATABASE] updated database with msg recived -> Sam220408_14
+00:30:52 ==> [RECIVED] msg recived from -> Sam220408_14
+00:30:52 ==> [DATABASE] updated database with msg recived -> Sam220408_14
+00:30:53 ==> [RECIVED] msg recived from -> Sam220408_14
+00:30:53 ==> [DATABASE] updated database with msg recived -> Sam220408_14
+00:30:53 ==> [RECIVED] msg recived from -> Sam220408_14
+00:30:53 ==> [DATABASE] updated database with msg recived -> Sam220408_14
+00:30:53 ==> [RECIVED] msg recived from -> Sam220408_14
+00:30:53 ==> [DATABASE] updated database with msg recived -> Sam220408_14
+00:30:53 ==> [RECIVED] msg recived from -> Sam220408_14
+00:30:53 ==> [DATABASE] updated database with msg recived -> Sam220408_14
+00:30:53 ==> [RECIVED] msg recived from -> Sam220408_14
+00:30:53 ==> [DATABASE] updated database with msg recived -> Sam220408_14
+00:30:53 ==> [RECIVED] msg recived from -> Sam220408_14
+00:30:53 ==> [DATABASE] updated database with msg recived -> Sam220408_14
+00:30:53 ==> [RECIVED] msg recived from -> Sam220408_14
+00:30:53 ==> [DATABASE] updated database with msg recived -> Sam220408_14
+00:30:53 ==> [RECIVED] msg recived from -> Sam220408_14
+00:30:53 ==> [DATABASE] updated database with msg recived -> Sam220408_14
+00:30:53 ==> [RECIVED] msg recived from -> Sam220408_14
+00:30:53 ==> [DATABASE] updated database with msg recived -> Sam220408_14
+00:30:54 ==> [RECIVED] msg recived from -> Sam220408_14
+00:30:54 ==> [DATABASE] updated database with msg recived -> Sam220408_14
+00:30:54 ==> [RECIVED] msg recived from -> Sam220408_14
+00:30:54 ==> [DATABASE] updated database with msg recived -> Sam220408_14
+00:30:54 ==> [RECIVED] msg recived from -> Sam220408_14
+00:30:54 ==> [DATABASE] updated database with msg recived -> Sam220408_14
+00:30:54 ==> [RECIVED] msg recived from -> Sam220408_14
+00:30:54 ==> [DATABASE] updated database with msg recived -> Sam220408_14
+00:30:54 ==> [RECIVED] msg recived from -> Sam220408_14
+00:30:54 ==> [DATABASE] updated database with msg recived -> Sam220408_14
+00:30:54 ==> [RECIVED] msg recived from -> Sam220408_14
+00:30:54 ==> [DATABASE] updated database with msg recived -> Sam220408_14
+00:30:54 ==> [RECIVED] msg recived from -> Sam220408_14
+00:30:54 ==> [DATABASE] updated database with msg recived -> Sam220408_14
+00:30:54 ==> [RECIVED] msg recived from -> Sam220408_14
+00:30:54 ==> [DATABASE] updated database with msg recived -> Sam220408_14
+00:30:54 ==> [RECIVED] msg recived from -> Sam220408_14
+00:30:54 ==> [DATABASE] updated database with msg recived -> Sam220408_14
+00:30:55 ==> [RECIVED] msg recived from -> Sam220408_14
+00:30:55 ==> [DATABASE] updated database with msg recived -> Sam220408_14
+00:30:55 ==> [RECIVED] msg recived from -> Sam220408_14
+00:30:55 ==> [DATABASE] updated database with msg recived -> Sam220408_14
+00:30:55 ==> [RECIVED] msg recived from -> Sam220408_14
+00:30:55 ==> [DATABASE] updated database with msg recived -> Sam220408_14
+00:30:58 ==> [EJECT] client ejcted -> Sam220408_14
+00:31:07 ==> [SHUTDOWN] The server is shutting down

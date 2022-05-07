@@ -1,0 +1,24 @@
+self.client_details[client_id] = [conn, [None], []]
+self.client_details[client_id] = [conn, [<partner>], []]
+
+
+
+ejecting client
+    delete from dictionary
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Identify the trends using the data

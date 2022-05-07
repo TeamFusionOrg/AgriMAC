@@ -16,9 +16,18 @@ from cryptography.fernet import Fernet
 from cryptography.hazmat.backends import default_backend
 from cryptography.hazmat.primitives import hashes
 from cryptography.hazmat.primitives.kdf.pbkdf2 import PBKDF2HMAC
+import mysql.connector
+import json
 
 #create and global instance for the coloring puspose
 c = COLORS()
+mydb = mysql.connector.connect(
+    host="localhost",
+    user="root",
+    password="",
+    database="fusion"
+)
+mycursor = mydb.cursor()
 
 class Server():
     def __init__(self, host, port, balcklist):    
@@ -156,23 +165,33 @@ class Server():
         """
         # if the reject function removes client from the client list
         # this function must be terminated to check whether id in the list
+
         while (client_id in self.client_details) and (not self.terminate):
-            # check if the other client ended the connection
-            if self.client_details[client_id][1][0] == None:
-                break
-            else:
-                # firstly recive the message
-                message = self.recv_message(conn, client_id)
-                # check if the message is a none type then do not proceed
-                if message:
-                    # then check if that is a command if not procees
-                    if not self.__run_commands(message, conn, client_id):
-                        print(f'{c.BOLD}[RECIVED]{c.RESET} msg recived from -> {c.ULINE+client_id+c.RESET}')
+
+            # firstly recive the message
+            message = self.recv_message(conn, client_id)
+            # check if the message is a none type then do not proceed
+            if message:
+                # then check if that is a command if not procees
+                if not self.__run_commands(message, conn, client_id):
+                    print(f'{c.BOLD}[RECIVED]{c.RESET} msg recived from -> {c.ULINE+client_id+c.RESET}')
+                    self.server_log.write(datetime.now().strftime("%H:%M:%S ==> "))
+                    self.server_log.write(f'[RECIVED] msg recived from -> {client_id}\n')
+                    
+                    date = datetime.now().strftime("%Y-%m-%d")
+                    time = datetime.now().strftime("%H:%M:%S")
+
+                    sql_string = "INSERT INTO `climate_data`(`client_id`, `date`, `time`, `data`) VALUES ('{}', '{}', '{}', '{}')".format(client_id, date, time, message)
+                    try:
+                        mycursor.execute(sql_string)
+                        mydb.commit()
+                        print(f'{c.BOLD}[DATABASE]{c.RESET} updated database with msg recived -> {c.ULINE+client_id+c.RESET}')
                         self.server_log.write(datetime.now().strftime("%H:%M:%S ==> "))
-                        self.server_log.write(f'[RECIVED] msg recived from -> {client_id}\n')
-                        # put that message in the partners message queue
-                        partner = self.client_details[client_id][1][0]
-                        self.client_details[partner][2].append(message)
+                        self.server_log.write(f'[DATABASE] updated database with msg recived -> {client_id}\n')
+                    except Exception as err:
+                        print('you are fucked mannnnnn')
+
+
 
     def send_message(self, conn, message, client_id, encrypt = True):
         """
@@ -301,6 +320,13 @@ class Server():
                     self.send_message(conn, '[-] You cannot connect your self', client_id)
                 return True
 
+            elif message[0] == 'send_data':
+                sql_string = "SELECT data FROM climate_data WHERE client_id = '{}' and date = '{}' and time = '{}'".format(message[1], message[2], message[3]) 
+                mycursor.execute(sql_string)
+                myresult = mycursor.fetchall()
+                self.send_message(conn, json.dumps(myresult), client_id)
+                return True
+
             # the quiting message. if this message recived eject the client
             elif message[0] == 'conn_quit()':
                 self.__eject_client(client_id)
@@ -327,42 +353,24 @@ class Server():
             # this variable will used to switch if client forcefully clise the connection
             # even before the bind of another client
 
-            client_aborted = False
-
             # until a the user have and partner we cannot gofurther. the client must have an partner
             # to chat with. so wait until client recive and partne id
 
             #fisrt of all check if this client exists.(if this client quited the connection)
             try:
-                while (self.client_details[client_id][1][0] == None) and (not self.terminate) :
-                    # recive messgae
-                    message = self.recv_message(conn, client_id)
-                    if message:
-                        self.__run_commands(message, conn, client_id)
 
-                    # if message is false connection reset error must be occured. means forcefully
-                    # closed the connection. so abort the procedure and eject the client
-                    elif message == False:
-                        client_aborted = True
-                        del(self.client_details[client_id])
-                        break
+                # create threads for recive messages and send messages
+                reciving_thread = threading.Thread(target=self.__hidden_recv, args=(conn, client_id))
+                sending_thread = threading.Thread(target=self.__hidden_send, args=(conn, client_id))
 
-                if not client_aborted:
-                    # create threads for recive messages and send messages
-                    reciving_thread = threading.Thread(target=self.__hidden_recv, args=(conn, client_id))
-                    sending_thread = threading.Thread(target=self.__hidden_send, args=(conn, client_id))
+                # start threads
+                reciving_thread.start()
+                sending_thread.start()
 
-                    # start threads
-                    reciving_thread.start()
-                    sending_thread.start()
-
-                    # after disconnecting kill those threads
-                    reciving_thread.join()
-                    sending_thread.join()
-                
-                else:
-                    # else the main loop also must be brocken
-                    break
+                # after disconnecting kill those threads
+                reciving_thread.join()
+                sending_thread.join()
+            
 
             except KeyError as err:
                 # if client closet their terminal quit the connection
