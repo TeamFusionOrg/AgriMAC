@@ -1,6 +1,6 @@
 # !/usr/bin/python
+
 import socket
-import threading
 from libs.colors import COLORS
 from platform import system
 from os import remove
@@ -80,41 +80,6 @@ class Client():
 
         return encrypted_message.decode('utf-8')
 
-    def __hidden_send(self):
-        """
-        DOCSTRING: this is the function which uses by the thread to forward
-        messages
-        conn: connection of the client
-        client_id: user name of the client
-        """
-        # while the terminate variable is False run the infinite loop
-        while not self.terminate:
-            # in this case a OS error will be raised when the input timeout
-            try:
-                current_msg = input().strip()
-                if current_msg == 'conn_quit()':
-                    self.terminate =True
-
-                self.send_message(current_msg)
-                print()
-
-            except EOFError:
-                exit()
-
-    def __hidden_recv(self):
-        """
-        DOCSTRING: this is the function which uses by the thread to recevie messages
-        conn: connection of the client
-        client_id: user name of the client
-        """
-        while not self.terminate:
-            message = self.recv_message()
-            if message:
-                if str(system()) == 'Windows':
-                    print(f'[RECIVED] {message}')
-                else:
-                    print(self.c.Cyan + f'[RECIVED] {message}' + self.c.RESET)
-
     def send_message(self, message, encrypt_= True):
         """
         DOCSTRING: this is the primary function to sent messages anyway
@@ -168,55 +133,34 @@ class Client():
             # this error occure wen time out
             return False
 
-    def __handle_client(self):
-        """
-        DOCSTRING: the pusrpose of this function is simple. Al this has to do
-        create two thread for sending and revceving messages. and handle
-        those clients
-        """
-        # create threads for recive messages and send messages
-        reciving_thread = threading.Thread(target=self.__hidden_recv)
-        sending_thread = threading.Thread(target=self.__hidden_send)
-
-        # start threads
-        reciving_thread.start()
-        sending_thread.start()
-
-        # after disconnecting kill those threads
-        reciving_thread.join()
-        exit()
-        sending_thread.join()
-
     def start_client(self):
         """
             DOCSTRING: this function will start the server
             fisrt try to connect to the server. And if sccueed
             send client data and establish the connection
         """
-        # print welcome message
-        print("\nClient Program started version: 1.0.0.0")
-        print('---------------------------------------\n')
-        print('Your Client ID -> {}'.format(self.client_id))
-        print('----------------------------------------\n')
 
         try:
             # connect to the server in order to start the client
             self.client.connect(self.addr)
             # send client data
             self.send_message(self.client_id)
-            self.__handle_client()
+            # self.__handle_client()
+            return True, ""
 
         except ConnectionRefusedError:
-            print("[ERROR] Server is Down program quiting")
-            exit(0)
+            status = "[ERROR] Server is Down program quiting"
+            return False, status
         
         except ConnectionAbortedError:
-            print("[ERROR] Server aborted the connection")
-            exit(0)
+            status = "[ERROR] Server aborted the connection"
+            return False, status
 
         except ConnectionError:
-            print("[ERROR] Connection error")
-            exit(0)
+            status = "[ERROR] Connection error"
+            return False, status
 
+    def stop_client(self):
+        self.send_message('conn_quit()')
 
 # end of the client class

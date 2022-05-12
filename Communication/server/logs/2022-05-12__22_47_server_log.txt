@@ -1,0 +1,15 @@
+22:47:52 ==> [START] Server is online and live 192.168.56.1 | 5151
+22:48:13 ==> [CONNECTION] new connection from 192.168.56.1 | 59870 | Green1
+22:48:20 ==> [COMMAND] command recived from -> Green1
+22:48:20 ==> [FORWARD] fetched data sent to -> Green1
+22:48:22 ==> [COMMAND] command recived from -> Green1
+22:48:22 ==> [EJECT] client ejcted -> Green1
+23:10:52 ==> [CONNECTION] new connection from 192.168.56.1 | 59962 | Green1
+23:10:52 ==> [COMMAND] command recived from -> Green1
+23:10:52 ==> [FORWARD] fetched data sent to -> Green1
+23:10:52 ==> [COMMAND] command recived from -> Green1
+23:10:52 ==> [EJECT] client ejcted -> Green1
+23:13:13 ==> [CONNECTION] new connection from 192.168.56.1 | 59979 | Green1
+23:13:13 ==> [COMMAND] command recived from -> Green1
+23:13:13 ==> [FORWARD] fetched data sent to -> Green1
+23:13:58 ==> [SHUTDOWN] The server is shutting down

@@ -1,5 +1,0 @@
-00:57:31 ==> [START] Server is online and live 192.168.8.101 | 5151
-00:57:43 ==> [CONNECTION] new connection from 192.168.8.101 | 63895 | Sam220408_14
-00:57:43 ==> [FORWARD] fetched data sent to -> Sam220408_14
-00:58:09 ==> [EJECT] client ejcted -> Sam220408_14
-00:58:17 ==> [SHUTDOWN] The server is shutting down

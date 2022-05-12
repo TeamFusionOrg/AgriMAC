@@ -326,15 +326,19 @@ class Server():
                 return True
 
             elif message[0] == 'send_data':
+                # Send data command is sent by the green houses
+                # if this command recived from  a client, the server should fetch the data using the given querry
+                # then convert it a JSON string and send back to the requested client
                 print(f'{c.BOLD}[COMMAND]{c.RESET} command recived from -> {c.ULINE+client_id+c.RESET}')
                 self.server_log.write(datetime.now().strftime("%H:%M:%S ==> "))
                 self.server_log.write(f'[COMMAND] command recived from -> {client_id}\n')
 
-
-                sql_string = "SELECT data FROM climate_data WHERE client_id = '{}' and date = '{}' and time = '{}'".format(message[1], message[2], message[3]) 
+                # LIKE keyword must be used because we don't know exat time
+                sql_string = "SELECT data FROM climate_data WHERE client_id = '{}' and date = '{}' and time LIKE '{}'".format(message[1], message[2], message[3]) 
                 try:
                     mycursor.execute(sql_string)
                     myresult = mycursor.fetchall()
+                    # make sure to convert data to a JSON string
                     self.send_message(conn, json.dumps(myresult), client_id)
 
                     print(f'{c.BOLD}[FORWARD]{c.RESET} fetched data sent to -> {c.ULINE+client_id+c.RESET}')

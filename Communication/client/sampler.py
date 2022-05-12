@@ -1,10 +1,10 @@
-from libs.client_sampler import Client
+from libs.client import Client
 import json
 import numpy as np
 from time import sleep
 
 def read_conf_file():
-    with open('client.conf', 'r') as config_file:
+    with open('sampler.conf', 'r') as config_file:
         config_data = config_file.readlines()
 
     client_conf_data = {}
@@ -22,7 +22,7 @@ client_instance.start_client()
 
 input()
 
-for i in range (50):
+for i in range (5):
     temp = ""
     PH = ""
     wind = ""
@@ -47,8 +47,6 @@ for i in range (50):
 
     client_instance.send_message(json.dumps(data))
 
-    sleep(0.1)
-
-input()
+    sleep(1)
 
 client_instance.stop_client()

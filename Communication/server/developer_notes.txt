@@ -1,7 +1,7 @@
 self.client_details[client_id] = [conn, [None], []]
 self.client_details[client_id] = [conn, [<partner>], []]
 
-
+send_data <client_id> <date> <time>
 
 ejecting client
     delete from dictionary
