@@ -148,6 +148,9 @@ def run_commands(command):
         with open('libs\\help_main.txt', 'r') as help_file:
             print(help_file.read(), end='\n\n\n')
 
+    elif command[0] == 'exit':
+        exit()
+
     else:
         try:
             if command[1] == 'add':

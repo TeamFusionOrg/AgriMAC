@@ -43,6 +43,7 @@ class Server():
 
         self.error_log = '' # to be initialized
         self.server_log = '' # to be initialized
+        self.client_error_log = '' # to be initialized
 
         # in client details the details of client will be saved as follow
         # key- client_id
@@ -363,6 +364,13 @@ class Server():
                 self.__eject_client(client_id)
                 return True
 
+            elif message[0] == 'client_error':
+                err = " ".join(message[1:]) # rejoin the error message with spaces
+                print(c.Magenta+c.BOLD+'[CLIENTERROR]'+c.RESET+ c.Magenta,'client_id -> {},  error msg -> {}'.format(client_id ,err), c.RESET)
+                self.client_error_log.write(datetime.now().strftime("%H:%M:%S ==> "))
+                self.client_error_log.write(f'[CLIENTERROR] client_id -> {client_id}, error msg -> {err}\n')
+
+                return True
             # if not a command retun false
             else:
                 return False
@@ -564,6 +572,7 @@ class Server():
         prefix = 'logs\\' + str(date.today()) + '__' + str(datetime.now().strftime('%H_%M_'))
         self.error_log = open(prefix + 'error_log.txt', 'w')
         self.server_log = open(prefix + 'server_log.txt', 'w')
+        self.client_error_log = open(prefix + 'client_error_log.txt', 'w')
 
         # firstly create two thread for the input and main server start
         server_start = threading.Thread(target=self.__main_server_start)

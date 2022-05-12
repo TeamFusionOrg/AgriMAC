@@ -59,10 +59,26 @@ class GreenHouse:
         """
         self.client.start_client() # start the client
 
-        data = self.recive_info("Sam220507_12", "2022-05-08", "09:58")
+        try: # try block must be used to prevent any kind of unexpected error occur from the client side
+
+            data = self.recive_info("Sam220507_12", "2022-05-08", "09:58")
+
+            print("Printing PH values for a example... :-)")            
+            for sub_data in data:
+                print(list(map(float, sub_data['results']['PH'].split(','))), end = "\n\n")
+
         
-        for sub_data in data:
-            print(list(map(float, sub_data['results']['PH'].split(','))), end = "\n\n")
+        except Exception as err:
+            # if a unknown exception occured during the execution, we have to send it the server for inspection
+            # then shutdown the client side
+            print(f"[-] An error occured. Error -> {err}")
+            print("{-} Closing the program")
+            # send the client error to the server
+            self.client.send_message(f"client_error {err}")
+            self.client.stop_client() # ending the communication with the server
+            exit()
+
+
 
         self.client.stop_client() # ending the communication with the server
 
