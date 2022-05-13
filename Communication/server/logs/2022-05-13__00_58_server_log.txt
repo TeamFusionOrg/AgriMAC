@@ -1,0 +1,2 @@
+00:58:15 ==> [START] Server is online and live 192.168.1.12 | 5151
+01:05:28 ==> [SHUTDOWN] The server is shutting down

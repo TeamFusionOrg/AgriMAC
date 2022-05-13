@@ -2,6 +2,7 @@
 # programmed by Yasiru Senerath
 # this is the script for the server
 
+import cryptography
 from libs.colors import COLORS
 from time import sleep
 from datetime import datetime
@@ -219,7 +220,7 @@ class Server():
             self.error_log.write(datetime.now().strftime("%H:%M:%S ==> "))
             self.error_log.write('[OSERROR] error msg -> {}\n'.format(err))
 
-    def recv_message(self, conn, client_id=None):
+    def recv_message(self, conn, client_id=None, IP=None):
         """
         DOCSTRING: this is the primary function to receve messages
         conn: connection of the client
@@ -251,6 +252,13 @@ class Server():
                 print(f'{c.Magenta+c.BOLD}[UNICODEERROR]{c.RESET+ c.Magenta} error msg -> {err}')
                 self.error_log.write(datetime.now().strftime("%H:%M:%S ==> "))
                 self.error_log.write(f'[UNICODEERROR] error msg -> {err}\n')
+            
+            except cryptography.fernet.InvalidToken:
+                print(c.Red+c.BOLD+'[WRONGPASS]'+c.RESET+c.Red+' wrong cryptography token from -> {}'.format(IP), c.RESET)
+                self.server_log.write(datetime.now().strftime("%H:%M:%S ==> "))
+                self.server_log.write(f'[WRONGPASS] wrong cryptography token from -> {IP}\n')
+
+                return -1 # notify that we have a wrong password
 
 
             conn.settimeout(None)
@@ -436,27 +444,50 @@ class Server():
                 #accept thread
                 conn, addr = self.server.accept()
                 #now recive the client id from the client
-                client_id = self.recv_message(conn)
+                client_id = self.recv_message(conn, None, addr[0])
 
-                # check if the client in the blacklist
-                if client_id not in self.balcklist:
-                    print(f'{c.Green+c.BOLD}[CONNECTION]{c.RESET+c.Green} new connection from {c.ULINE+addr[0]} | {addr[1]} | {client_id+c.RESET}')
-                    self.server_log.write(datetime.now().strftime("%H:%M:%S ==> "))
-                    self.server_log.write(f'[CONNECTION] new connection from {addr[0]} | {addr[1]} | {client_id}\n')
 
-                    #add client details for the dictionary
-                    self.client_details[client_id] = [conn, [None], []]
-                    print(f'{c.Green+c.BOLD}[DETAILS]{c.RESET+c.Green} now {len(self.client_details)}(s) clients are online', c.RESET)
-                    #create thread for the client
-                    client_thread = threading.Thread(target=self.__handle_clients, args=(conn, addr, client_id))
-                    #start thread
-                    client_thread.start()
+                
+                if client_id != -1: # check if client has the correct pass word
+                    if client_id.strip() != "": # do not let unknown clients connect
+
+                        if client_id not in self.balcklist: # check if the client in the blacklist
+
+                            print(f'{c.Green+c.BOLD}[CONNECTION]{c.RESET+c.Green} new connection from {c.ULINE+addr[0]} | {addr[1]} | {client_id+c.RESET}')
+                            self.server_log.write(datetime.now().strftime("%H:%M:%S ==> "))
+                            self.server_log.write(f'[CONNECTION] new connection from {addr[0]} | {addr[1]} | {client_id}\n')
+
+                            #add client details for the dictionary
+                            self.client_details[client_id] = [conn, [None], []]
+                            print(f'{c.Green+c.BOLD}[DETAILS]{c.RESET+c.Green} now {len(self.client_details)}(s) clients are online', c.RESET)
+                            #create thread for the client
+                            client_thread = threading.Thread(target=self.__handle_clients, args=(conn, addr, client_id))
+                            #start thread
+                            client_thread.start()
+
+                        else:
+                            # in this case client in black list
+                            print(c.Magenta+c.BOLD+'[BLACKLISTED]'+c.RESET+c.Magenta, 'blacklisted client tryed to connect from | {} | {} | {}'.format(c.ULINE+addr[0], addr[1], client_id+c.RESET), c.RESET)
+                            self.server_log.write(datetime.now().strftime("%H:%M:%S ==> "))
+                            self.server_log.write('[BLACKLISTED] blacklisted client tryed to connect from {} | {} | {} |\n'.format(addr[0], addr[1]))
+                    
+                    else:
+                        # in this case we can assume that this is a unexpected client. so do not connect
+                        print(c.Magenta+c.BOLD+'[UNKOWNCLIENT]'+c.RESET+c.Magenta, 'unknown client tryed to connect from | {} | {} |'.format(c.ULINE+addr[0], addr[1]), c.RESET)
+                        self.server_log.write(datetime.now().strftime("%H:%M:%S ==> "))
+                        self.server_log.write('[UNKOWNCLIENT] unknown client tryed to connect from | {} | {} |\n'.format(addr[0], addr[1]))
+                
             
             except OSError as err:
                 if str(err) != 'timed out':
                     print(c.Magenta+c.BOLD+'[OSERROR]'+c.RESET+c.Magenta, 'error msg -> {}'.format(err), c.RESET)
                     self.error_log.write(datetime.now().strftime("%H:%M:%S ==> "))
                     self.error_log.write('[OSERROR] error msg -> {}\n'.format(err))
+
+            except TypeError as err:
+                print(c.Magenta+c.BOLD+'[REFUSED]'+c.RESET+c.Magenta, 'error msg -> {}'.format(err), c.RESET)
+                self.error_log.write(datetime.now().strftime("%H:%M:%S ==> "))
+                self.error_log.write('[REFUSED] error msg -> {}\n'.format(err))                
 
         try:
             # close the connection

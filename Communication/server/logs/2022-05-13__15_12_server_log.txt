@@ -1,0 +1,8 @@
+15:12:54 ==> [START] Server is online and live 192.168.56.1 | 5151
+15:13:12 ==> [WRONGPASS] wrong cryptography token from -> 192.168.56.1
+15:18:06 ==> [CONNECTION] new connection from 192.168.56.1 | 63309 | Green1
+15:18:06 ==> [COMMAND] command recived from -> Green1
+15:18:06 ==> [FORWARD] fetched data sent to -> Green1
+15:18:06 ==> [COMMAND] command recived from -> Green1
+15:18:06 ==> [EJECT] client ejcted -> Green1
+15:20:13 ==> [SHUTDOWN] The server is shutting down
