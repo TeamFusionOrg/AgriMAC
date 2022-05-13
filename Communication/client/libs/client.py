@@ -14,14 +14,14 @@ from cryptography.hazmat.primitives.kdf.pbkdf2 import PBKDF2HMAC
 
 
 class Client():
-    def __init__(self, client_id, server, port):
+    def __init__(self, client_id, server, port, passwd):
         """
         DOCSTRING: this function will initalize all the global varables for the class
         client_id: this is the user name of the server
         server   : this is the IP address of the server to be connecter
         port     : this is the PORT of the server to be connected
         """
-        self.passwd = 'A4nJ!dk@12en#jfdk*kjns.sdjk'
+        self.passwd = passwd
         self.key = self.key_gen(self.passwd)
         self.buffer = 64
         self.client_id = client_id

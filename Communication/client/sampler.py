@@ -16,37 +16,53 @@ def read_conf_file():
     return client_conf_data
 
 conf_data = read_conf_file()
-
-client_instance = Client(conf_data['client_id:'][0], conf_data['host:'][0], int(conf_data['port:'][0]))
-client_instance.start_client()
-
-input()
-
-for i in range (5):
-    temp = ""
-    PH = ""
-    wind = ""
-
-    t_data = np.random.randint(20, 40, size = (6))
-    p_data = np.random.randint(50, 80, size = (6)) / 10
-    w_data = np.random.randint(0, 40, size = (6))
-    for i in range(6):
-        temp += str(t_data[i])
-        PH += str(p_data[i])
-        wind += str(w_data[i])
-        if i != 5:
-            temp += ","
-            PH += ","
-            wind += ","
+client_instance = Client(conf_data['client_id:'][0], conf_data['host:'][0], int(conf_data['port:'][0]), conf_data['passwd:'][0])
 
 
-    data = {
-        "results" : {"temp":temp, "PH":PH, "wind":wind},
-        "status":"OK"
-    }
 
-    client_instance.send_message(json.dumps(data))
+class Sampler:
+    def __init__(self, client):
+        """
+        DOCSTRING: this function will initialize the sampler
+        """
+        self.client = client
+    
+    def send_info(self):
 
-    sleep(1)
+        for i in range (5):
+            temp = ""
+            PH = ""
+            wind = ""
 
-client_instance.stop_client()
+            t_data = np.random.randint(20, 40, size = (6))
+            p_data = np.random.randint(50, 80, size = (6)) / 10
+            w_data = np.random.randint(0, 40, size = (6))
+            for i in range(6):
+                temp += str(t_data[i])
+                PH += str(p_data[i])
+                wind += str(w_data[i])
+                if i != 5:
+                    temp += ","
+                    PH += ","
+                    wind += ","
+
+
+            data = {
+                "results" : {"temp":temp, "PH":PH, "wind":wind},
+                "status":"OK"
+            }
+
+            self.client.send_message(json.dumps(data))
+
+            sleep(1)
+
+    def run(self):
+        self.client.start_client()
+
+        self.send_info()
+
+        self.client.stop_client()
+
+
+sampler = Sampler(client_instance)
+sampler.run()

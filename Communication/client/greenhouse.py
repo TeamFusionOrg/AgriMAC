@@ -21,7 +21,8 @@ def read_conf_file():
 
 # read the configuration file and create an instance of the client module
 conf_data = read_conf_file()
-client_instance = Client(conf_data['client_id:'][0], conf_data['host:'][0], int(conf_data['port:'][0]))
+
+client_instance = Client(conf_data['client_id:'][0], conf_data['host:'][0], int(conf_data['port:'][0]), conf_data['passwd:'][0])
 
 
 class GreenHouse:
