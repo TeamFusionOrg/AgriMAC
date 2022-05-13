@@ -26,7 +26,11 @@ class Sampler:
         DOCSTRING: this function will initialize the sampler
         """
         self.client = client
+        self.unsent = [] # unsent data will append to this list
     
+    def record_unsent(self, data):
+        pass
+
     def send_info(self):
 
         for i in range (5):
