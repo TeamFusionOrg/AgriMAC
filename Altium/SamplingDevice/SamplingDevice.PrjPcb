@@ -98,7 +98,7 @@ GenerateClassCluster=0
 DocumentUniqueId=QXVJPUQZ
 
 [Document4]
-DocumentPath=C:\Users\ASUS\Downloads\Raspberry-Pi-Pico.IntLib
+DocumentPath=C:\Users\ASUS\Downloads\SMD_PCB_lib.PcbLib
 AnnotationEnabled=1
 AnnotateStartValue=1
 AnnotationIndexControlEnabled=0
@@ -112,7 +112,7 @@ ClassGenCCAutoRoomEnabled=1
 ClassGenNCAutoScope=None
 DItemRevisionGUID=
 GenerateClassCluster=0
-DocumentUniqueId=
+DocumentUniqueId=WBJYSBET
 
 [Configuration1]
 Name=Sources
