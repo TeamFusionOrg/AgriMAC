@@ -82,6 +82,12 @@ class GreenHouse:
 
 
         self.client.stop_client() # ending the communication with the server
+    
+    def temperature():
+        """
+        DOCSTRING: this is the function for temperature controlling of the greenhouse. This function is added as an example for the structure of coding
+        we are going to use.
+        """
 
 
 greenHouse = GreenHouse(client_instance)
