@@ -1,1 +1,1 @@
-worker: python Communication/server/main.py
+web: python Communication/server/main.py
