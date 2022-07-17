@@ -632,7 +632,7 @@ class Server():
         start function and main input function and run it
         """
         # fisrt of all create two files for the server and error logging
-        prefix = 'logs\\' + str(date.today()) + '__' + str(datetime.now().strftime('%H_%M_'))
+        prefix = 'Communication\\server\\logs\\' + str(date.today()) + '__' + str(datetime.now().strftime('%H_%M_'))
         self.error_log = open(prefix + 'error_log.txt', 'w')
         self.server_log = open(prefix + 'server_log.txt', 'w')
         self.client_error_log = open(prefix + 'client_error_log.txt', 'w')
