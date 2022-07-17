@@ -24,10 +24,10 @@ import json
 #create and global instance for the coloring puspose
 c = COLORS()
 mydb = mysql.connector.connect(
-    host="localhost",
-    user="root",
-    password="",
-    database="fusion"
+    host="db4free.net",
+    user="team_fusion_2207",
+    password="A@b234$t*b23EfRh",
+    database="fusion_2207"
 )
 mycursor = mydb.cursor()
 
