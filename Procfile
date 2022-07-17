@@ -1,1 +1,1 @@
-worker: python epx.py
+worker: python Communication/server/main.py
