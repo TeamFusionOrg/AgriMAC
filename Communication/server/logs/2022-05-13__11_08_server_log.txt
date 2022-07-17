@@ -1,7 +1,0 @@
-11:08:44 ==> [START] Server is online and live 192.168.1.12 | 5151
-11:09:32 ==> [CONNECTION] new connection from 192.168.1.12 | 51031 | Green1
-11:09:32 ==> [COMMAND] command recived from -> Green1
-11:09:32 ==> [FORWARD] fetched data sent to -> Green1
-11:09:32 ==> [COMMAND] command recived from -> Green1
-11:09:32 ==> [EJECT] client ejcted -> Green1
-11:10:14 ==> [SHUTDOWN] The server is shutting down

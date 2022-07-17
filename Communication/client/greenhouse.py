@@ -1,7 +1,6 @@
 # !/usr/bin/python
 from libs.client import Client
 import json
-import numpy as np
 from time import sleep
 
 def read_conf_file():
@@ -21,9 +20,6 @@ def read_conf_file():
 
 # read the configuration file and create an instance of the client module
 conf_data = read_conf_file()
-
-client_instance = Client(conf_data['client_id:'][0], conf_data['host:'][0], int(conf_data['port:'][0]), conf_data['passwd:'][0])
-
 
 class GreenHouse:
     def __init__(self, client):
@@ -62,7 +58,7 @@ class GreenHouse:
 
         try: # try block must be used to prevent any kind of unexpected error occur from the client side
 
-            data = self.recive_info("Sam220507_12", "2022-05-08", "09:58")
+            data = self.recive_info("Sam220507_12", "2022-05-08", "02:10")
 
             print("Printing PH values for a example... :-)")            
             for sub_data in data:
@@ -82,13 +78,10 @@ class GreenHouse:
 
 
         self.client.stop_client() # ending the communication with the server
-    
-    def temperature():
-        """
-        DOCSTRING: this is the function for temperature controlling of the greenhouse. This function is added as an example for the structure of coding
-        we are going to use.
-        """
 
+
+client_instance = Client(conf_data['client_id:'][0], conf_data['host:'][0], int(conf_data['port:'][0]), conf_data['passwd:'][0])
 
 greenHouse = GreenHouse(client_instance)
 greenHouse.run()
+

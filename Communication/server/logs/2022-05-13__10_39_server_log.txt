@@ -1,3 +1,0 @@
-10:39:27 ==> [START] Server is online and live 192.168.1.12 | 5151
-10:46:57 ==> [CONNECTION] new connection from 52.202.215.126 | 35282 | 
-10:47:03 ==> [SHUTDOWN] The server is shutting down

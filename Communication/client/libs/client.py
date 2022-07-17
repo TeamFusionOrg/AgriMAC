@@ -32,12 +32,6 @@ class Client():
         # create the socket
         self.client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.client.settimeout(5)
-        # terminate varibale is the most important variable in the class
-        # of the terminate varible set to True all loops will terminate imidiatly
-        # all the threads will terminate
-        # and the client will shutdown
-        self.terminate = False
-
         self.c = COLORS()
 
     def key_gen(self, passwd):
@@ -80,7 +74,7 @@ class Client():
 
         return encrypted_message.decode('utf-8')
 
-    def send_message(self, message, encrypt_= True):
+    def send_message(self, message, encrypt_= False):
         """
         DOCSTRING: this is the primary function to sent messages anyway
         conn: connection of the client
@@ -99,12 +93,16 @@ class Client():
             self.client.send(message_size)
             #then send the message
             self.client.send(message.encode('utf-8'))
+
+            return True
+
         
         except ConnectionAbortedError:
-            print('[-] The server is down program is quiting...')
-            self.terminate = True
+            # print('[-] The server is down')
+            return False
+            
 
-    def recv_message(self, encrypt = True):
+    def recv_message(self, encrypt = False):
         """
         DOCSTRING: this is the primary function to receve messages
         conn: connection of the client

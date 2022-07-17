@@ -1,3 +1,0 @@
-15:07:52 ==> [START] Server is online and live 192.168.56.1 | 5151
-15:07:54 ==> [UNKOWNCLIENT] unknown client tryed to connect from | 192.168.56.1 | 63111 |
-15:12:24 ==> [SHUTDOWN] The server is shutting down

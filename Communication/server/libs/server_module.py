@@ -2,6 +2,7 @@
 # programmed by Yasiru Senerath
 # this is the script for the server
 
+from email import message_from_binary_file
 import cryptography
 from libs.colors import COLORS
 from time import sleep
@@ -96,6 +97,34 @@ class Server():
 
         return encrypted_message.decode('utf-8')
 
+    def update_databse(self, client_id, message):
+        message = json.loads(message)
+        date = message['date']
+        time = message['time']
+        del(message['date'])
+        del(message['time'])
+        # date = datetime.now().strftime("%Y-%m-%d")
+        # time = datetime.now().strftime("%H:%M:%S")
+
+        try:
+            message = json.dumps(message)
+            sql_string = "INSERT INTO `climate_data`(`client_id`, `date`, `time`, `data`) VALUES ('{}', '{}', '{}', '{}')".format(client_id, date, time, message)
+            mycursor.execute(sql_string)
+            mydb.commit()
+            print(f'{c.BOLD}[DATABASE]{c.RESET} updated database with msg recived -> {c.ULINE+client_id+c.RESET}')
+            self.server_log.write(datetime.now().strftime("%H:%M:%S ==> "))
+            self.server_log.write(f'[DATABASE] updated database with msg recived -> {client_id}\n')
+
+        except json.decoder.JSONDecodeError as err:
+            self.error_log.write(datetime.now().strftime("%H:%M:%S ==> "))
+            self.error_log.write('[JSONERROR] error msg -> {}\n'.format(err))
+            print(c.Magenta+c.BOLD+'[JSONERROR]'+c.RESET+ c.Magenta,'error msg -> {}'.format(err), c.RESET)
+
+        except Exception as err:
+            self.error_log.write(datetime.now().strftime("%H:%M:%S ==> "))
+            self.error_log.write('[ERROR] error msg -> {}\n'.format(err))
+            print(c.Magenta+c.BOLD+'[ERROR]'+c.RESET+ c.Magenta,'error msg -> {}'.format(err), c.RESET)
+
     def __eject_client(self, client_id):
         """
         DOCSTRING: this function will cleanly remove a connected client
@@ -180,23 +209,10 @@ class Server():
                     self.server_log.write(datetime.now().strftime("%H:%M:%S ==> "))
                     self.server_log.write(f'[RECIVED] msg recived from -> {client_id}\n')
                     
-                    date = datetime.now().strftime("%Y-%m-%d")
-                    time = datetime.now().strftime("%H:%M:%S")
+                    # must check validites before this. But for the time beeng just update the databse
+                    self.update_databse(client_id, message)
 
-                    sql_string = "INSERT INTO `climate_data`(`client_id`, `date`, `time`, `data`) VALUES ('{}', '{}', '{}', '{}')".format(client_id, date, time, message)
-                    try:
-                        mycursor.execute(sql_string)
-                        mydb.commit()
-                        print(f'{c.BOLD}[DATABASE]{c.RESET} updated database with msg recived -> {c.ULINE+client_id+c.RESET}')
-                        self.server_log.write(datetime.now().strftime("%H:%M:%S ==> "))
-                        self.server_log.write(f'[DATABASE] updated database with msg recived -> {client_id}\n')
-
-                    except Exception as err:
-                        self.error_log.write(datetime.now().strftime("%H:%M:%S ==> "))
-                        self.error_log.write('[ERROR] error msg -> {}\n'.format(err))
-                        print(c.Magenta+c.BOLD+'[ERROR]'+c.RESET+ c.Magenta,'error msg -> {}'.format(err), c.RESET)
-
-    def send_message(self, conn, message, client_id, encrypt = True):
+    def send_message(self, conn, message, client_id, encrypt = False, date=False):
         """
         DOCSTRING: this is the primary function to sent messages anyway
         conn: connection of the client
@@ -205,12 +221,14 @@ class Server():
         """
         try:
             #fisrt of all we need to send size details
-            message = self.encrypt(message)
+            if encrypt:
+                message = self.encrypt(message)
             message_size = str(len(message)).encode('utf-8')
             #procces message size details
             message_size += b' ' * (self.buffer - len(message_size))
             #send message size details
-            conn.send(message_size)
+            if not date:
+                conn.send(message_size)
             #then send the message
             conn.send(message.encode('utf-8'))
         
@@ -220,7 +238,7 @@ class Server():
             self.error_log.write(datetime.now().strftime("%H:%M:%S ==> "))
             self.error_log.write('[OSERROR] error msg -> {}\n'.format(err))
 
-    def recv_message(self, conn, client_id=None, IP=None):
+    def recv_message(self, conn, client_id=None, IP=None, encrypt = False):
         """
         DOCSTRING: this is the primary function to receve messages
         conn: connection of the client
@@ -229,7 +247,7 @@ class Server():
         # recv method will wait until it receves a messgae if not will not continue
         # in order to propper working code must continue so, it will stop waiting 
         # after 2 seconts it will continue the code
-        conn.settimeout(2)
+        conn.settimeout(10)
         try:
             # in this case unicode decode error may be occured
             try:
@@ -241,7 +259,8 @@ class Server():
                 if msg_size:
                     msg_size = int(msg_size) # this is the size of up comming message
                     msg = conn.recv(msg_size).decode('utf-8') #recive and decode
-                    msg = self.decrypt(msg)
+                    if encrypt:
+                        msg = self.decrypt(msg)
                     return msg #return message
                 else:
                     # return false if nothing recived
@@ -363,6 +382,21 @@ class Server():
                     print(c.Magenta+c.BOLD+'[ERROR]'+c.RESET+ c.Magenta,'error msg -> {}'.format(err), c.RESET)
                     return False
 
+            elif message[0] == 'send_datetime':
+                print(f'{c.BOLD}[COMMAND]{c.RESET} command recived from -> {c.ULINE+client_id+c.RESET}')
+                self.server_log.write(datetime.now().strftime("%H:%M:%S ==> "))
+                self.server_log.write(f'[COMMAND] command recived from -> {client_id}\n')
+
+                time_info = {
+                    'date': datetime.now().strftime("%Y-%m-%d"),
+                    'time': datetime.now().strftime("%H:%M:%S"),
+                    'yday': datetime.now().timetuple().tm_yday,
+                    'wday': datetime.now().timetuple().tm_wday
+                }
+
+                self.send_message(conn, json.dumps(time_info), client_id, False, True)
+                return True
+
             # the quiting message. if this message recived eject the client
             elif message[0] == 'conn_quit()':
                 print(f'{c.BOLD}[COMMAND]{c.RESET} command recived from -> {c.ULINE+client_id+c.RESET}')
@@ -445,10 +479,8 @@ class Server():
                 conn, addr = self.server.accept()
                 #now recive the client id from the client
                 client_id = self.recv_message(conn, None, addr[0])
-
-
                 
-                if client_id != -1: # check if client has the correct pass word
+                if client_id != -1 and client_id != None: # check if client has the correct pass word
                     if client_id.strip() != "": # do not let unknown clients connect
 
                         if client_id not in self.balcklist: # check if the client in the blacklist

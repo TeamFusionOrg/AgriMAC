@@ -1,2 +1,0 @@
-10:54:59 ==> [CLIENTERROR] client_id -> Green1, error msg -> could not convert string to float: 'chamith'
-10:56:37 ==> [CLIENTERROR] client_id -> Green1, error msg -> division by zero
