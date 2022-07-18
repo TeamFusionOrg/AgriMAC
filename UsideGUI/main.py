@@ -11,6 +11,10 @@ def rgb_hack(rgb):
     return "#%02x%02x%02x" % rgb
 
 
+def Close():
+    exit()
+    root.destroy()
+
 plt.style.use('ggplot')
 # values for first graph
 x_vals = []
@@ -38,9 +42,9 @@ def animate(i):
     ax1.set_title("Temperature",fontweight ="bold",fontsize = 14)
     ax2.set_title("Humidity",fontweight ="bold",fontsize = 14)
     ax3.set_title("Moisture Level Of Soil",fontweight ="bold",fontsize = 14)
-    ax1.plot(x_vals[-10:-1], y_vals[-10:-1],linewidth = 1)
-    ax2.plot(x_vals[-10:-1], y_vals2[-10:-1],linewidth = 1)
-    ax3.plot(x_vals[-10:-1], y_vals3[-10:-1],linewidth = 1)
+    ax1.plot(x_vals[-10:-1], y_vals[-10:-1],linewidth = 1,color='green', marker='o', markersize=6)
+    ax2.plot(x_vals[-10:-1], y_vals2[-10:-1],linewidth = 1,color='red', marker='o', markersize=6)
+    ax3.plot(x_vals[-10:-1], y_vals3[-10:-1],linewidth = 1,color='blue', marker='o', markersize=6)
     
 
 
@@ -48,21 +52,26 @@ def animate(i):
 # GUI
 root = Tk.Tk()
 root.geometry("1000x800")
-root.config(bg=rgb_hack((0, 200, 150)))
+root.config(bg=rgb_hack((100, 200, 150)))
 # root.wm_attributes('-transparentcolor','#add123')
 
 bgIm = ImageTk.PhotoImage(file = 'bg4.png')
 
-label = Tk.Label(root, image = bgIm,text="TeleEnv",font=("Georgia", 30),fg="black", bg=rgb_hack((0, 200, 150))).grid(column=0, row=0)
+label = Tk.Label(root, text="TeleEnv",font=("Georgia", 30),fg="black", bg=rgb_hack((100, 200, 150))).grid(column=0, row=0)
 root.wm_attributes('-transparentcolor','#add123')
 
 # graph 1
-fig = plt.figure(figsize=(10,5),facecolor=rgb_hack((0, 200, 150)), edgecolor= 'black')
+fig = plt.figure(figsize=(20,5),facecolor=rgb_hack((100, 200, 150)), edgecolor= 'black')
 canvas = FigureCanvasTkAgg(fig, master=root)
 canvas.get_tk_widget().grid(column=0, row=1)
 # Create two subplots in row 1 and column 1, 2
 fig.subplots(1, 3)
 
 ani = FuncAnimation(fig, animate, interval=1000, blit=False)
+
+  
+# Button for closing
+exit_button = Tk.Button(root, text="Exit", command=Close,bg =rgb_hack((100, 200, 20)))
+exit_button.place(relx = 0.45,rely = 0.8,relwidth = 0.2,relheight= 0.1)
 
 Tk.mainloop()
