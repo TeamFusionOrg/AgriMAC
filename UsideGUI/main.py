@@ -5,8 +5,13 @@ from itertools import count
 import matplotlib.pyplot as plt
 from matplotlib.animation import FuncAnimation
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
+from PIL import ImageTk,Image
 
-plt.style.use('dark_background')
+def rgb_hack(rgb):
+    return "#%02x%02x%02x" % rgb
+
+
+plt.style.use('ggplot')
 # values for first graph
 x_vals = []
 y_vals = []
@@ -30,48 +35,34 @@ def animate(i):
     ax2.cla()
     ax3.cla()
     # Plot new data
+    ax1.set_title("Temperature",fontweight ="bold",fontsize = 14)
+    ax2.set_title("Humidity",fontweight ="bold",fontsize = 14)
+    ax3.set_title("Moisture Level Of Soil",fontweight ="bold",fontsize = 14)
     ax1.plot(x_vals[-10:-1], y_vals[-10:-1],linewidth = 1)
     ax2.plot(x_vals[-10:-1], y_vals2[-10:-1],linewidth = 1)
     ax3.plot(x_vals[-10:-1], y_vals3[-10:-1],linewidth = 1)
+    
 
 
 
 # GUI
 root = Tk.Tk()
 root.geometry("1000x800")
-# root.attributes('-fullscreen',True)
-label = Tk.Label(root, text="Realtime Animated Graphs").grid(column=0, row=0)
+root.config(bg=rgb_hack((0, 200, 150)))
+# root.wm_attributes('-transparentcolor','#add123')
+
+bgIm = ImageTk.PhotoImage(file = 'bg4.png')
+
+label = Tk.Label(root, image = bgIm,text="TeleEnv",font=("Georgia", 30),fg="black", bg=rgb_hack((0, 200, 150))).grid(column=0, row=0)
+root.wm_attributes('-transparentcolor','#add123')
 
 # graph 1
-fig = plt.figure(figsize=(20,10))
+fig = plt.figure(figsize=(10,5),facecolor=rgb_hack((0, 200, 150)), edgecolor= 'black')
 canvas = FigureCanvasTkAgg(fig, master=root)
 canvas.get_tk_widget().grid(column=0, row=1)
 # Create two subplots in row 1 and column 1, 2
-
 fig.subplots(1, 3)
+
 ani = FuncAnimation(fig, animate, interval=1000, blit=False)
 
 Tk.mainloop()
-
-
-
-# import matplotlib.pyplot as plt
-# from matplotlib.animation import FuncAnimation
-# from random import randrange
- 
-# fig = plt.figure(figsize=(6, 3))
-# x = [0]
-# y = [0]
- 
-# ln, = plt.plot(x, y, '-')
-# plt.axis([0, 100, 0, 10])
- 
-# def update(frame):
-#     x.append(x[-1] + 1)
-#     y.append(randrange(0, 10))
- 
-#     ln.set_data(x, y) 
-#     return ln,
- 
-# animation = FuncAnimation(fig, update, interval=500)
-# plt.show()
