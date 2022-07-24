@@ -9,7 +9,8 @@ void loop() {
   output_value= analogRead(sensor_pin);
   float percentage = 100 - output_value*100/1024;
   Serial.print("Mositure : ");
-  Serial.print(round(percentage));
+  int out = round(percentage);
+  Serial.print(out);
   Serial.println("%");
   delay(1000);
   }
