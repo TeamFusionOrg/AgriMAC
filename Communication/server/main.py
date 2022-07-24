@@ -40,7 +40,7 @@ def proccess_data(data):
     
     return configuration
 
-def read_write(data=None, read=True, defaulet_file = 'Communication/server/config.conf'):
+def read_write(data=None, read=True, defaulet_file = 'config.conf'):
     """
     DOCSTRING: this function is used to read from a file or write
     data to the file

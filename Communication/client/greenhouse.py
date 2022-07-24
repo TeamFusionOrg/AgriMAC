@@ -58,7 +58,7 @@ class GreenHouse:
 
         try: # try block must be used to prevent any kind of unexpected error occur from the client side
 
-            data = self.recive_info("Sam220507_12", "2022-05-08", "02:10")
+            data = self.recive_info("Sam220608_134", "2022-05-16", "11:30")
 
             print("Printing PH values for a example... :-)")            
             for sub_data in data:

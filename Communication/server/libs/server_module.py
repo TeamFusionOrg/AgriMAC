@@ -23,13 +23,13 @@ import json
 
 #create and global instance for the coloring puspose
 c = COLORS()
-mydb = mysql.connector.connect(
-    host="db4free.net",
-    user="team_fusion_2207",
-    password="A@b234$t*b23EfRh",
-    database="fusion_2207"
-)
-mycursor = mydb.cursor()
+# mydb = mysql.connector.connect(
+#     host="db4free.net",
+#     user="team_fusion_2207",
+#     password="A@b234$t*b23EfRh",
+#     database="fusion_2207"
+# )
+# mycursor = mydb.cursor()
 
 class Server():
     def __init__(self, host, port, balcklist):    
@@ -173,9 +173,11 @@ class Server():
             # to expect an key error
             try:
                 # first of all check if other client terminated the connection
-                if self.client_details[client_id][1][0] == None:
-                    break
+                while self.client_details[client_id][1][0] == None:
+                    # break
+                    pass
                 else:
+
                     if len(self.client_details[client_id][2]):
                         message = self.client_details[client_id][2].pop(0)
                         self.send_message(conn, message, client_id)
@@ -196,13 +198,12 @@ class Server():
         """
         # if the reject function removes client from the client list
         # this function must be terminated to check whether id in the list
-
         while (client_id in self.client_details) and (not self.terminate):
-
             # firstly recive the message
             message = self.recv_message(conn, client_id)
             # check if the message is a none type then do not proceed
             if message:
+
                 # then check if that is a command if not procees
                 if not self.__run_commands(message, conn, client_id):
                     print(f'{c.BOLD}[RECIVED]{c.RESET} msg recived from -> {c.ULINE+client_id+c.RESET}')
@@ -210,7 +211,9 @@ class Server():
                     self.server_log.write(f'[RECIVED] msg recived from -> {client_id}\n')
                     
                     # must check validites before this. But for the time beeng just update the databse
-                    self.update_databse(client_id, message)
+                    if message.split()[0] != "send_to_rpi":
+                        # self.update_databse(client_id, message)
+                        pass
 
     def send_message(self, conn, message, client_id, encrypt = False, date=False):
         """
@@ -364,10 +367,10 @@ class Server():
                 # LIKE keyword must be used because we don't know exat time
                 sql_string = "SELECT data FROM climate_data WHERE client_id = '{}' and date = '{}' and time LIKE '{}'".format(message[1], message[2], message[3]) 
                 try:
-                    mycursor.execute(sql_string)
-                    myresult = mycursor.fetchall()
+                    # mycursor.execute(sql_string)
+                    # myresult = mycursor.fetchall()
                     # make sure to convert data to a JSON string
-                    self.send_message(conn, json.dumps(myresult), client_id)
+                    # self.send_message(conn, json.dumps(myresult), client_id)
 
                     print(f'{c.BOLD}[FORWARD]{c.RESET} fetched data sent to -> {c.ULINE+client_id+c.RESET}')
                     self.server_log.write(datetime.now().strftime("%H:%M:%S ==> "))
@@ -381,6 +384,60 @@ class Server():
                     self.error_log.write('[ERROR] error msg -> {}\n'.format(err))
                     print(c.Magenta+c.BOLD+'[ERROR]'+c.RESET+ c.Magenta,'error msg -> {}'.format(err), c.RESET)
                     return False
+
+            elif message[0] == "send_to_rpi":
+                # Send data command is sent by the green houses
+                # if this command recived from  a client, the server should fetch the data using the given querry
+                # then convert it a JSON string and send back to the requested client
+                print(f'{c.BOLD}[COMMAND]{c.RESET} command recived from -> {c.ULINE+client_id+c.RESET}')
+                self.server_log.write(datetime.now().strftime("%H:%M:%S ==> "))
+                self.server_log.write(f'[COMMAND] command recived from -> {client_id}\n')
+
+
+                try:
+
+                    proc_message = ",".join(message[1:])
+                    self.client_details["rpi"][2].append(proc_message)
+                    
+                    self.client_details["WebSite"][1][0] = "rpi"
+                    self.client_details["rpi"][1][0] = "WebSite"
+
+                    return True
+
+                except Exception as err:
+                    self.send_message(conn, '[-] Something went wrong in the server side', client_id)
+                    self.error_log.write(datetime.now().strftime("%H:%M:%S ==> "))
+                    self.error_log.write('[ERROR] error msg -> {}\n'.format(err))
+                    print(c.Magenta+c.BOLD+'[ERROR]'+c.RESET+ c.Magenta,'error msg -> {}'.format(err), c.RESET)
+                    return False
+
+            elif message[0] == "send_to_WebSite":
+                # Send data command is sent by the green houses
+                # if this command recived from  a client, the server should fetch the data using the given querry
+                # then convert it a JSON string and send back to the requested client
+                print(f'{c.BOLD}[COMMAND]{c.RESET} command recived from -> {c.ULINE+client_id+c.RESET}')
+                self.server_log.write(datetime.now().strftime("%H:%M:%S ==> "))
+                self.server_log.write(f'[COMMAND] command recived from -> {client_id}\n')
+
+
+                try:
+
+                    proc_message = ",".join(message[1:])
+                    self.client_details["WebSite"][2].append(proc_message)
+                    
+                    self.client_details["WebSite"][1][0] = "rpi"
+                    self.client_details["rpi"][1][0] = "WebSite"
+
+                    return True
+
+                except Exception as err:
+                    self.send_message(conn, '[-] Something went wrong in the server side', client_id)
+                    self.error_log.write(datetime.now().strftime("%H:%M:%S ==> "))
+                    self.error_log.write('[ERROR] error msg -> {}\n'.format(err))
+                    print(c.Magenta+c.BOLD+'[ERROR]'+c.RESET+ c.Magenta,'error msg -> {}'.format(err), c.RESET)
+                    return False
+
+
 
             elif message[0] == 'send_datetime':
                 print(f'{c.BOLD}[COMMAND]{c.RESET} command recived from -> {c.ULINE+client_id+c.RESET}')
@@ -632,7 +689,7 @@ class Server():
         start function and main input function and run it
         """
         # fisrt of all create two files for the server and error logging
-        prefix = 'Communication/server/logs/' + str(date.today()) + '__' + str(datetime.now().strftime('%H_%M_'))
+        prefix = 'logs/' + str(date.today()) + '__' + str(datetime.now().strftime('%H_%M_'))
         self.error_log = open(prefix + 'error_log.txt', 'w')
         self.server_log = open(prefix + 'server_log.txt', 'w')
         self.client_error_log = open(prefix + 'client_error_log.txt', 'w')
