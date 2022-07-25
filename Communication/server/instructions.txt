@@ -1,0 +1,7 @@
+Instructions to Start the server
+================================
+
+1) Start XAMPP (Apache, Mysql)
+2) Start Python Server
+3) Start WebServerCode.py python file
+

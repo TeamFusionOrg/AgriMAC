@@ -18,6 +18,9 @@ with open(update_file_location, 'r') as update_file:
 
 
 def check_for_update():
+    """
+    DOCSTRING: this function constantly waiting for a update from the website and send to the raspberry pi
+    """
     global before_content 
 
     while True:
@@ -43,6 +46,9 @@ def check_for_update():
             print (err)
 
 def web_data_editor():
+    """
+    DOCSTRING" this function recives the current weather inside the greenhouse and update the database
+    """
     while True:
         message = client_inst.recv_message(False)
         if message:
@@ -60,8 +66,6 @@ def main():
 
     if (client_inst.start_client()[0]):
         print("client started")
-        # sleep(4)
-        # print("client sleep done")
 
         sending_thread = Thread(target=check_for_update)
         reciving_thread = Thread(target=web_data_editor)

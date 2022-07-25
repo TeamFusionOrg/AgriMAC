@@ -11,13 +11,20 @@ PASSWRD = "A4nJ!dk@12en#jfdk*kjns.sdjk"
 client_inst = client.Client("rpi", SERVER, PORT, PASSWRD)
 
 def recive_data():
+    """
+    DOCSTRING: this function will recive data from the website, then fire the actuators
+    """
     while True:
         message = client_inst.recv_message(False)
         if message:
             print(message)
-            
+
 
 def send_data():
+    """
+    DOCSTRING: this function will measure all the weather conditions and send to the server
+    """
+
     while True:
 
         temp = 27
