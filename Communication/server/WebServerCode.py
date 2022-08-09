@@ -6,7 +6,7 @@ from threading import Thread
 before_content = ""
 update_file_location = r"E:\\soft_installations\\xampp\\htdocs\\adminkit\\static\\scripts\\edit_by_web.txt"
 
-SERVER = "192.168.56.1"
+SERVER = "192.168.8.105"
 PORT = 5151
 PASSWRD = "A4nJ!dk@12en#jfdk*kjns.sdjk"
 
